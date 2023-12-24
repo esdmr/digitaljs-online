@@ -205,6 +205,15 @@ $('#newtab').on('click', function (e) {
     make_tab(filename, extension, initial);
 });
 
+$(() => {
+	if (location.search.startsWith('?data=')) {
+		const file = location.search.slice(6);
+		$.get('/api/data', (data, status) => {
+	        make_tab(file, 'sv', data);
+	    });
+	}
+});
+
 for (const [file, name] of examples) {
     $('<a class="dropdown-item" href="">').text(name).appendTo($('#excodes')).click((e) => {
         e.preventDefault();

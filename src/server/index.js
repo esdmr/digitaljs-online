@@ -6,12 +6,24 @@ const sqlite = require('sqlite');
 const sqlite3 = require('sqlite3');
 const SQL = require('sql-template-strings');
 const sha256 = require('js-sha256');
+const path = require('node:path');
 
 Promise.resolve((async () => {
     const db = await sqlite.open({filename: './database.sqlite', driver: sqlite3.Database});
     await db.migrate(); // ({ force: 'last' });
 
     app.use(bodyParser.json({limit: '50mb'}));
+
+	let data = '';
+
+    app.put('/api/data', (req, res) => {
+        data = String(req.body['']);
+        res.send('OK');
+    });
+
+    app.get('/api/data', (req, res) => {
+        res.send(data);
+    });
 
     app.post('/api/yosys2digitaljs', async (req, res) => {
         try {
@@ -55,7 +67,9 @@ Promise.resolve((async () => {
         }
     });
 
-    app.listen(8080, 'localhost');
+    app.use(express.static(path.join(__dirname, '..', '..', 'dist')));
+
+    app.listen(15555, 'localhost');
 })());
 
 
